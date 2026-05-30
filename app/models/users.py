@@ -1,9 +1,14 @@
-from sqlalchemy import DateTime,func,TEXT,Boolean,CheckConstraint
+from sqlalchemy import (
+    DateTime,func,TEXT,Boolean,
+    CheckConstraint,BigInteger,
+    ForeignKey
+    )
 from sqlalchemy.dialects.postgresql import UUID
 from  sqlalchemy.orm import Mapped,mapped_column
 import uuid
 
 from db.base import Base
+from datetime import datetime
 
 class Users(Base):
     __tablename__ = "users"
@@ -40,4 +45,34 @@ class Users(Base):
             "sign_up_type IN ('app login','google login')",
             name="valid_sign_up_type"
         ),
+    )
+
+class Sessions(Base):
+
+    __tablename__ = "sessions"
+    id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+        autoincrement=True
+    )
+    session_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        default=uuid.uuid4
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id",ondelete="CASCADE"),
+        nullable=False
+    )
+    hashed_refresh_token: Mapped[str] = mapped_column(
+        TEXT,
+        nullable=True
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
     )
