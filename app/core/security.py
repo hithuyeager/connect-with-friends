@@ -1,6 +1,8 @@
 from jose import JWTError,jwt,ExpiredSignatureError
 from uuid import UUID
 from datetime import datetime,timedelta,timezone
+from authlib.integrations.starlette_client import OAuth
+
 
 from config import settings
 import errors as error
@@ -10,6 +12,17 @@ ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE = settings.access_token_expire
 REFRESH_TOKEN_EXPIRE = settings.refresh_token_expire
 
+oauth = OAuth()
+
+oauth.register(
+    name = "google",
+    client_id = settings.google_client_id,
+    client_secret = settings.google_client_secret,
+    server_metadata_url = "https://accounts.google.com/.well-known/openid-configuration",
+    client_kwargs = {
+        "scope": "openid email profile"
+    }
+)
 #---------------------------GENERATING TOKENS--------------------------------------
 def generate_access_token(user_id: str) -> str:
     payload = {
