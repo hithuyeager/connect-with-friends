@@ -36,6 +36,11 @@ class Users(Base):
         TEXT,
         nullable=True,
     )
+    google_sub: Mapped[str] = mapped_column(
+        TEXT,
+        nullable=True,
+        unique=True
+    )
     is_verified: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
