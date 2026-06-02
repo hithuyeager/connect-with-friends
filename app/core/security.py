@@ -5,7 +5,7 @@ from authlib.integrations.starlette_client import OAuth
 
 
 from config import settings
-import errors as error
+from . import errors as error
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm

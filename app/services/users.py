@@ -42,12 +42,12 @@ async def user_google_login(request: Request,conn: asyncpg.Connection):
     user_info = await callback_url(request)
     user_email = user_info.get("email")
     user_sub = user_info.get("sub")
-    username = user_info.get("username","")
-    user_id = await get_google_user_by_sub(conn,user_sub)
+    username = user_info.get("name","")
+    user_id = str(await get_google_user_by_sub(conn,user_sub))
     if user_id:
         return generate_tokens(user_id)
     new_user_id = await add_google_user(conn,user_email,username,user_sub)
-    return generate_tokens(new_user_id)
+    return generate_tokens(str(new_user_id))
         
 
 

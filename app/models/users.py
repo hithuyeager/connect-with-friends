@@ -1,7 +1,7 @@
 from sqlalchemy import (
     DateTime,func,TEXT,Boolean,
     CheckConstraint,BigInteger,
-    ForeignKey
+    ForeignKey,text
     )
 from sqlalchemy.dialects.postgresql import UUID
 from  sqlalchemy.orm import Mapped,mapped_column
@@ -16,7 +16,7 @@ class Users(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
-        default=uuid.uuid4
+        server_default=text("gen_random_uuid()")
     )
     username: Mapped[str] = mapped_column(
         TEXT,
@@ -44,6 +44,7 @@ class Users(Base):
     is_verified: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
+        nullable=True
     )
     __table_args__ = (
         CheckConstraint(
