@@ -2,6 +2,8 @@ from repositories.users_repo import (
     get_user_by_email,add_app_user,add_google_user,
     get_google_user_by_sub
 )
+from tasks.email_tasks import send_welcome_message
+
 import asyncpg
 from fastapi import Request
 from authlib.integrations.base_client.errors import OAuthError,TokenExpiredError
@@ -22,7 +24,7 @@ def generate_tokens(user_id: str) -> dict:
 #------------------GOOGLE UTILS-----------------------------------------
 async def google_login(request: Request):
     redirect_uri = request.url_for("google_callback")
-    return await oauth.google.authorize_redirect(request,redirect_uri)
+    return await oauth.google.authorize_redirect(request,redirect_uri,prompt="select_account")
 
 async def callback_url(request: Request):
     try:
@@ -43,10 +45,13 @@ async def user_google_login(request: Request,conn: asyncpg.Connection):
     user_email = user_info.get("email")
     user_sub = user_info.get("sub")
     username = user_info.get("name","")
-    user_id = str(await get_google_user_by_sub(conn,user_sub))
+    user_id = await get_google_user_by_sub(conn,user_sub)
     if user_id:
-        return generate_tokens(user_id)
+        print("fetched from db and got it")
+        return generate_tokens(str(user_id))
     new_user_id = await add_google_user(conn,user_email,username,user_sub)
+    print("new user id inserted",new_user_id)
+    send_welcome_message.delay(user_email,username)
     return generate_tokens(str(new_user_id))
         
 

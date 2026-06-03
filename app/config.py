@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     google_client_secret: str
     google_secret_key: str
     database_url_for_raw_sql: str
+    my_email: str
+    my_email_password: str
 
     model_config = SettingsConfigDict(env_file = ".env")
 
