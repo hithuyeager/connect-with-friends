@@ -11,7 +11,19 @@ async def get_user_by_email(
          FROM users WHERE email = $1""",
          email
     )
-    return dict(user)
+    if user:
+        return dict(user)
+    
+async def get_by_username(
+    conn: asyncpg.Connection,
+    username: str
+):
+    user = await conn.fetchval(
+        "SELECT id FROM users WHERE username = $1",
+        username
+    )
+    return user
+
 
 async def add_app_user(
     conn: asyncpg.Connection,

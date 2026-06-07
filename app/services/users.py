@@ -53,6 +53,3 @@ async def user_google_login(request: Request,conn: asyncpg.Connection):
     print("new user id inserted",new_user_id)
     send_welcome_message.delay(user_email,username)
     return generate_tokens(str(new_user_id))
-        
-
-

@@ -23,4 +23,13 @@ class GoogleTokenError(UsersErrors):
 class GoogleLoginError(UsersErrors):
     def __init__(self):
         super().__init__("INAPPROPRIATE LOGIN",403)
-
+class WrongPasswordError(UsersErrors):
+    def __init__(self):
+        super().__init__("WRONG PASSWORD",401)
+class InvalidHashError(UsersErrors):
+    def __init__(self):
+        super().__init__("PLEASE PROVIDE PROPER HASH",401)
+class HashingError(UsersErrors):
+    def __init__(self):
+        super().__init__("ERROR WHILE HASHING PASSSWORD",501)
+        

@@ -2,7 +2,9 @@ from jose import JWTError,jwt,ExpiredSignatureError
 from uuid import UUID
 from datetime import datetime,timedelta,timezone
 from authlib.integrations.starlette_client import OAuth
-
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError,InvalidHashError,HashingError
+from asyncio import to_thread
 
 from config import settings
 from . import errors as error
@@ -63,4 +65,26 @@ def verify_refresh_token(token: str):
     except JWTError:
         raise error.InvalidTokenError()
     
+#------------------PASSWORD HASHER-----------------------------------
 
+ph = PasswordHasher(
+    time_cost=3,
+    memory_cost=65536,
+    parallelism=2,
+    hash_len=32,
+    salt_len=16
+)
+async def hash_password(raw_password: str) -> str:
+    try:
+        return await to_thread(ph.hash,raw_password)
+    except HashingError:
+        raise error.HashingError()
+
+async def verify_password(hashed_password: str,raw_password: str):
+    try:
+        return await to_thread(ph.verify,hashed_password,raw_password)
+    except VerifyMismatchError:
+        raise error.WrongPasswordError()
+    except InvalidHashError:
+        raise error.InvalidHashError()
+    
