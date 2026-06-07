@@ -1,5 +1,4 @@
 from fastapi import WebSocket
-from  .auth import verify_user
 
 class ConnectionManager:
     def __init__(self):
@@ -8,10 +7,10 @@ class ConnectionManager:
     async def connect(
         self,
         websocket: WebSocket,
-        room_id: str
+        room_id: str,
+        user_id: str
         ):
         await websocket.accept()
-        user_id = verify_user(websocket)
         if room_id not in self.rooms:
             self.rooms[room_id] = {}
         self.rooms[room_id][user_id] = websocket
