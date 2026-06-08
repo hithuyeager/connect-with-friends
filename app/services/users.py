@@ -1,16 +1,16 @@
-from repositories.users_repo import (
-    get_user_by_email,add_app_user,add_google_user,
-    get_google_user_by_sub
-)
-from tasks.email_tasks import send_welcome_message
-
 import asyncpg
 from fastapi import Request
 from authlib.integrations.base_client.errors import OAuthError,TokenExpiredError
 
 from core.security import (
-    oauth,generate_access_token,generate_refresh_token_token
+    oauth,generate_access_token,generate_refresh_token_token,
+    hash_password,verify_password
 )
+from repositories.users_repo import (
+    get_user_by_email,add_app_user,add_google_user,
+    get_google_user_by_sub,get_by_username
+)
+from tasks.email_tasks import send_welcome_message
 import core.errors as error
 
 def generate_tokens(user_id: str) -> dict:
@@ -53,3 +53,33 @@ async def user_google_login(request: Request,conn: asyncpg.Connection):
     print("new user id inserted",new_user_id)
     send_welcome_message.delay(user_email,username)
     return generate_tokens(str(new_user_id))
+
+#------------------APP SIGNUP--------------------------------------------
+async def app_sign_up(
+    conn: asyncpg.Connection,
+    email: str,
+    username: str,
+    password: str):
+    email_exist = await get_user_by_email(conn,email)
+    if email_exist:
+        raise error.EmailAlreadyExistError()
+    username_exist = await get_by_username(conn,username)
+    if username_exist:
+        raise error.UsernameExistError()
+    hashed_password = hash_password(password)
+    user_id = await add_app_user(conn,email,username,hashed_password)
+    return generate_tokens(user_id)
+
+async def app_sign_in(
+    conn: asyncpg.Connection,
+    email: str,
+    password: str
+):
+    user_info = await get_user_by_email(conn,email)
+    if not user_info:
+        raise error.EmailNotExistError()
+    if user_info["sign_up_type"] == "google login":
+        raise error.GoogleUserError()
+    if verify_password(user_info["password"],password):
+        return generate_tokens(user_info["id"])
+    

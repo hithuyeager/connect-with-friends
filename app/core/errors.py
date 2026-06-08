@@ -32,4 +32,18 @@ class InvalidHashError(UsersErrors):
 class HashingError(UsersErrors):
     def __init__(self):
         super().__init__("ERROR WHILE HASHING PASSSWORD",501)
+class EmailAlreadyExistError(UsersErrors):
+    def __init__(self):
+        super().__init__("EMAIL ALREADY EXIST",401)
+class UsernameExistError(UsersErrors):
+    def __init__(self):
+        super().__init__("USERNAME ALREADY TAKEN",401)
+class GoogleUserError(UsersErrors):
+    def __init__(self):
+        super().__init__("EMAIL SIGNEDUP WITH GOOGLE",401)
+class EmailNotExistError(UsersErrors):
+    def __init__(self):
+        super().__init__("EMAIL DIDNT SIGNED UP")
+        
+
         

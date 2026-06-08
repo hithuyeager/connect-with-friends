@@ -7,12 +7,11 @@ async def get_user_by_email(
     email: str
     ):
     user = await conn.fetchrow(
-        """SELECT email,username,sign_up_type
+        """SELECT id,email,username,sign_up_type,password 
          FROM users WHERE email = $1""",
          email
     )
-    if user:
-        return dict(user)
+    return dict(user) if user else None
     
 async def get_by_username(
     conn: asyncpg.Connection,
@@ -32,10 +31,10 @@ async def add_app_user(
     password: str,
     sign_up_type: str = "app login"
 ):
-    await conn.execute(
+    await conn.fetchval(
         """ INSERT INTO  users 
         (email,username,password,sign_up_type) 
-        values ($1,$2,$3,$4)""",
+        values ($1,$2,$3,$4) RETURNING id""",
         email,username,password,sign_up_type
     )
     
