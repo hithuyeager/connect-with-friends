@@ -17,7 +17,7 @@ async def signup(user: Signup,conn: asyncpg.Connection = Depends(get_connection)
         content=APIResponse(
             message="success",
             data = tokens
-        )
+        ).model_dump()
     )
 
 @router.post("/signin")
@@ -28,5 +28,5 @@ async def signin(user: Signin,conn: asyncpg.Connection = Depends(get_connection)
         content=APIResponse(
             message="success",
             data = tokens
-        )
+        ).model_dump()
     )

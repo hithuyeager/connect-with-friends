@@ -28,5 +28,5 @@ async def global_exception_handler(request: Request,exc: UsersErrors):
         content=APIResponse(
             message="error",
             data = exc.message
-        )
+        ).model_dump()
     )

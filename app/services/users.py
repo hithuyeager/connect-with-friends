@@ -14,8 +14,8 @@ from tasks.email_tasks import send_welcome_message
 import core.errors as error
 
 def generate_tokens(user_id: str) -> dict:
-    access_token = generate_access_token(user_id)
-    refresh_token = generate_refresh_token_token(user_id)
+    access_token = generate_access_token(str(user_id))
+    refresh_token = generate_refresh_token_token(str(user_id))
     return {
         "access_token" : access_token,
         "refresh_token" : refresh_token
@@ -66,7 +66,7 @@ async def app_sign_up(
     username_exist = await get_by_username(conn,username)
     if username_exist:
         raise error.UsernameExistError()
-    hashed_password = hash_password(password)
+    hashed_password = await hash_password(password)
     user_id = await add_app_user(conn,email,username,hashed_password)
     return generate_tokens(user_id)
 
@@ -80,6 +80,6 @@ async def app_sign_in(
         raise error.EmailNotExistError()
     if user_info["sign_up_type"] == "google login":
         raise error.GoogleUserError()
-    if verify_password(user_info["password"],password):
+    if await verify_password(user_info["password"],password):
         return generate_tokens(user_info["id"])
     
