@@ -1,4 +1,4 @@
-from websockets.connection_manager import manager
+from ws.connection_manager import manager
 from fastapi import WebSocket,WebSocketDisconnect
 from datetime import datetime
 
