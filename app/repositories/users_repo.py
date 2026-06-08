@@ -31,7 +31,7 @@ async def add_app_user(
     password: str,
     sign_up_type: str = "app login"
 ):
-    await conn.fetchval(
+    return await conn.fetchval(
         """ INSERT INTO  users 
         (email,username,password,sign_up_type) 
         values ($1,$2,$3,$4) RETURNING id""",

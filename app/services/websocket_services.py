@@ -30,7 +30,7 @@ async def chat_system(
                 "room_id" : room_id,
                 "timestamp" : datetime.utcnow().isoformat()
             }
-            await manager.send_to_room(payload,room_id,websocket)
+            await manager.send_to_room(payload,room_id,user_id)
     except WebSocketDisconnect:
         manager.disconnect(user_id,room_id)
         notify_exit = {
@@ -38,4 +38,3 @@ async def chat_system(
             "message" : f"{user_id} has left the room",
             "timestamp" : datetime.utcnow().isoformat()
         }
-        await manager.disconnect(user_id,room_id)

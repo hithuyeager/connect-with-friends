@@ -44,6 +44,9 @@ class GoogleUserError(UsersErrors):
 class EmailNotExistError(UsersErrors):
     def __init__(self):
         super().__init__("EMAIL DIDNT SIGNED UP")
+class InvalidPasswordError(UsersErrors):
+    def __init__(self):
+        super().__init__("INCORRECT PASSWORD",401)
         
 
         
