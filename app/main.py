@@ -2,6 +2,7 @@ from fastapi import FastAPI,Request
 from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from db.connection import connect_to_db
 from api.central_api import router
@@ -30,3 +31,11 @@ async def global_exception_handler(request: Request,exc: UsersErrors):
             data = exc.message
         ).model_dump()
     )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

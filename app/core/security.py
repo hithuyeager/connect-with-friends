@@ -34,7 +34,7 @@ def generate_access_token(user_id: str) -> str:
     }
     return jwt.encode(payload,SECRET_KEY,algorithm=ALGORITHM)
 
-def generate_refresh_token_token(user_id: str) -> str:
+def generate_refresh_token(user_id: str) -> str:
     payload = {
         "sub" : user_id,
         "exp" : datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE),

@@ -3,7 +3,7 @@ from fastapi import Request
 from authlib.integrations.base_client.errors import OAuthError,TokenExpiredError
 
 from core.security import (
-    oauth,generate_access_token,generate_refresh_token_token,
+    oauth,generate_access_token,generate_refresh_token,
     hash_password,verify_password
 )
 from repositories.users_repo import (
@@ -15,7 +15,7 @@ import core.errors as error
 
 def generate_tokens(user_id: str) -> dict:
     access_token = generate_access_token(str(user_id))
-    refresh_token = generate_refresh_token_token(str(user_id))
+    refresh_token = generate_refresh_token(str(user_id))
     return {
         "access_token" : access_token,
         "refresh_token" : refresh_token
