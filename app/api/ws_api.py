@@ -38,10 +38,10 @@ async def create_direct_room(
         )
     )
 
-@router.websocket("/chat/{room_id}")
+@router.websocket("/chat/{room_id}/{access_token}")
 async def chat_endpoint(
     websocket: WebSocket,
     room_id: str,
-    current_user = Depends(get_current_user)
+    access_token: str
 ):
-    await chat_system(websocket,room_id,current_user["sub"])
+    await chat_system(websocket,room_id,access_token)

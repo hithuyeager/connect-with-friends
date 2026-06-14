@@ -22,8 +22,10 @@ async def search_users(conn: asyncpg.Connection ,search_users: str, current_user
 async def chat_system(
     websocket: WebSocket,
     room_id: str,
-    user_id: str
+    access_token: str
 ):
+    user = verify_access_token(access_token)
+    user_id = user["sub"]
     await manager.connect(websocket,room_id,user_id)
     notify_entry = {
         "type" : "system",
@@ -31,7 +33,7 @@ async def chat_system(
         "timestamp" : datetime.utcnow().isoformat()
     }
 
-    await manager.send_to_room(notify_entry,room_id,websocket)
+    await manager.send_to_room(notify_entry,room_id,user_id)
 
     try:
         while True:
@@ -46,3 +48,8 @@ async def chat_system(
             await manager.send_to_room(payload,room_id,user_id)
     except WebSocketDisconnect:
         manager.disconnect(user_id,room_id)
+        await manager.send_to_room({
+            "type": "system",
+            "message": f"{user_id} left the room",
+            "timestamp": datetime.utcnow().isoformat()
+        }, room_id, user_id)
