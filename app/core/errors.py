@@ -47,6 +47,9 @@ class EmailNotExistError(UsersErrors):
 class InvalidPasswordError(UsersErrors):
     def __init__(self):
         super().__init__("INCORRECT PASSWORD",401)
+class NoUsersMatchError(UsersErrors):
+    def __init__(self):
+        super().__init__("NO USER MATCHED",400)
         
 
         
