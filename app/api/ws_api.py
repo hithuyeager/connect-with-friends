@@ -22,7 +22,7 @@ async def search_by_name(
         content=APIResponse(
             message="success",
             data=users
-        )
+        ).model_dump()
     )
 @router.post("/room/direct")
 async def create_direct_room(
@@ -35,7 +35,7 @@ async def create_direct_room(
         content=APIResponse(
             message="success",
             data = room_id
-        )
+        ).model_dump()
     )
 
 @router.websocket("/chat/{room_id}/{access_token}")
