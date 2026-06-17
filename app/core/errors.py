@@ -43,13 +43,19 @@ class GoogleUserError(UsersErrors):
         super().__init__("EMAIL SIGNEDUP WITH GOOGLE",401)
 class EmailNotExistError(UsersErrors):
     def __init__(self):
-        super().__init__("EMAIL DIDNT SIGNED UP")
+        super().__init__("EMAIL DIDNT SIGNED UP",401)
 class InvalidPasswordError(UsersErrors):
     def __init__(self):
         super().__init__("INCORRECT PASSWORD",401)
 class NoUsersMatchError(UsersErrors):
     def __init__(self):
         super().__init__("NO USER MATCHED",400)
-        
+class InvalidSession(UsersErrors):
+    def __init__(self):
+        super().__init__("THIS SESSION HAS EXPIRED",403)
+class FraudDetection(UsersErrors):
+    def __init__(self):
+        super().__init__("UNKNOWN REFRESH TOKEN USED",400)
+
 
         

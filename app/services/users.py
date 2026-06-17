@@ -39,7 +39,7 @@ async def callback_url(request: Request):
         raise error.GoogleLoginError()
     return user_info
 
-#--------------------SIGNUP ROUTE FUNCTION----------------------
+#--------------------SIGNUP GOOGLE ROUTE FUNCTION----------------------
 async def user_google_login(request: Request,conn: asyncpg.Connection):
     user_info = await callback_url(request)
     user_email = user_info.get("email")

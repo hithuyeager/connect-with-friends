@@ -60,3 +60,36 @@ async def get_google_user_by_sub(
         "SELECT id FROM users WHERE google_sub = $1",
         google_sub
     )
+
+async def get_session_info(
+    conn: asyncpg.Connection,
+    session_id: str
+):
+    info = await conn.fetchrow(
+    """SELECT session_id,user_id,hashed_refresh_token,is_active 
+    FROM sessions WHERE session_id = $1
+    """,session_id
+    )
+    return dict(info) if info else None
+
+async def insert_new_session(
+        conn: asyncpg.Connection,
+        user_id: str
+):
+    session_id = await conn.fetchval(
+    """INSERT INTO sessions (user_id) 
+    values ($1) RETURNING session_id
+    """,user_id
+    ) 
+    return str(session_id)
+async def insert_refresh_token(
+    conn: asyncpg.Connection,
+    session_id: str,
+    hashed_refresh_token: str
+):
+    result = conn.fetchval(
+    """UPDATE sessions SET hashed_refresh_token 
+    = $2 WHERE session_id = $1 RETURNING session_id
+    """,session_id,hashed_refresh_token
+    )
+    return result if result else None

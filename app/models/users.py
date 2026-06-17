@@ -56,14 +56,11 @@ class Users(Base):
 class Sessions(Base):
 
     __tablename__ = "sessions"
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True
-    )
+    
     session_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        default=uuid.uuid4
+        primary_key=True,
+        server_default=text("gen_random_uuid()")
     )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
