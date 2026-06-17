@@ -10,7 +10,7 @@ from core.security import (
 from repositories.users_repo import (
     get_user_by_email,add_app_user,add_google_user,
     get_google_user_by_sub,get_by_username,insert_new_session,
-    insert_refresh_token,get_session_info
+    insert_refresh_token,get_session_info,logout_session
 )
 from tasks.email_tasks import send_welcome_message
 import core.errors as error
@@ -114,3 +114,7 @@ async def token_rotation(
     if is_succeed:
         return tokens
 
+async def logout_the_session(conn: asyncpg.Connection,refresh_token: str):
+    payload = verify_refresh_token(refresh_token)
+    await logout_session(conn,payload["session_id"])
+    return  

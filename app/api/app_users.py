@@ -4,7 +4,7 @@ import asyncpg
 
 from schemas.users_schema import Signin,Signup,RefreshToken
 from schemas.responses import APIResponse
-from services.users import app_sign_in,app_sign_up,token_rotation
+from services.users import app_sign_in,app_sign_up,token_rotation,logout_the_session
 from dependencies import get_connection
 
 router = APIRouter()
@@ -43,4 +43,13 @@ async def rotate_tokens(
             data=tokens
         ).model_dump()
     )
-
+@router.post("logout")
+async def expire_session(token: RefreshToken,conn: asyncpg.Connection=Depends(get_connection)):
+    await logout_the_session(conn,token.refresh_token)
+    return JSONResponse(
+        status_code=200,
+        content=APIResponse(
+            message="success",
+            data=None
+        ).model_dump()
+    )

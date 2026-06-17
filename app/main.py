@@ -20,6 +20,14 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(SessionMiddleware,secret_key=settings.google_secret_key)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(router)
  
 @app.exception_handler(UsersErrors)
@@ -31,11 +39,3 @@ async def global_exception_handler(request: Request,exc: UsersErrors):
             data = exc.message
         ).model_dump()
     )
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)

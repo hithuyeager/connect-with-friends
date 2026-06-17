@@ -100,3 +100,7 @@ async def insert_refresh_token(
     """,session_id,hashed_refresh_token
     )
     return str(result) if result else None
+async def logout_session(conn: asyncpg.Connection,session_id: str):
+    await conn.execute("""UPDATE sessions SET IS_ACTIVE = false WHERE 
+        session_id = $1 """,session_id)
+    
