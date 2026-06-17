@@ -2,9 +2,9 @@ from fastapi import APIRouter,Depends
 from fastapi.responses import JSONResponse
 import asyncpg
 
-from schemas.users_schema import Signin,Signup
+from schemas.users_schema import Signin,Signup,RefreshToken
 from schemas.responses import APIResponse
-from services.users import app_sign_in,app_sign_up
+from services.users import app_sign_in,app_sign_up,token_rotation
 from dependencies import get_connection
 
 router = APIRouter()
@@ -30,3 +30,17 @@ async def signin(user: Signin,conn: asyncpg.Connection = Depends(get_connection)
             data = tokens
         ).model_dump()
     )
+@router.post("/rotate")
+async def rotate_tokens(
+    token: RefreshToken,
+    conn: asyncpg.Connection = Depends(get_connection)
+):
+    tokens = await token_rotation(conn,token.refresh_token)
+    return JSONResponse(
+        status_code=200,
+        content=APIResponse(
+            message="success",
+            data=tokens
+        ).model_dump()
+    )
+

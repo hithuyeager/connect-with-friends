@@ -70,7 +70,14 @@ async def get_session_info(
     FROM sessions WHERE session_id = $1
     """,session_id
     )
-    return dict(info) if info else None
+    if info:
+        return {
+            "session_id" : str(info["session_id"]),
+            "user_id" : str(info["user_id"]),
+            "hashed_refresh_token" : info["hashed_refresh_token"],
+            "is_active" : bool(info["is_active"])
+        }
+    return None
 
 async def insert_new_session(
         conn: asyncpg.Connection,
@@ -87,9 +94,9 @@ async def insert_refresh_token(
     session_id: str,
     hashed_refresh_token: str
 ):
-    result = conn.fetchval(
+    result =await conn.fetchval(
     """UPDATE sessions SET hashed_refresh_token 
     = $2 WHERE session_id = $1 RETURNING session_id
     """,session_id,hashed_refresh_token
     )
-    return result if result else None
+    return str(result) if result else None
