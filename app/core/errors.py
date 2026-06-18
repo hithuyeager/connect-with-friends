@@ -58,7 +58,7 @@ class FraudDetection(UsersErrors):
         super().__init__("UNKNOWN REFRESH TOKEN USED",400)
 class RoomError(UsersErrors):
     def __init__(self):
-        super().__init__("ROOM NOT FOUND OR ROOM EMPTY",400)
+        super().__init__("ROOM NOT FOUND",400)
 class DataBaseError(UsersErrors):
     def __init__(self):
         super().__init__("FAILURE AT DATABSE",400)

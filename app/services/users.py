@@ -32,7 +32,7 @@ async def make_new_session(conn:asyncpg.Connection,user_id: str):
         if is_succeed:
             return tokens
         else:
-            raise error.DataBaseError()
+            return None
 
 #------------------GOOGLE UTILS-----------------------------------------
 async def google_login(request: Request):
@@ -62,9 +62,8 @@ async def user_google_login(request: Request,conn: asyncpg.Connection):
     if user:
         return await make_new_session(conn,user["id"])
     new_user_id = await add_google_user(conn,user_email,username,user_sub)
-    print("new user id inserted",new_user_id)
     send_welcome_message.delay(user_email,username)
-    return make_new_session(conn,new_user_id)
+    return await make_new_session(conn,new_user_id)
 
 #------------------APP SIGNUP--------------------------------------------
 async def app_sign_up(
@@ -113,6 +112,8 @@ async def token_rotation(
     is_succeed = await insert_refresh_token(conn,payload["session_id"],hashed_refresh_token)
     if is_succeed:
         return tokens
+    else:
+        raise error.DataBaseError()
 
 async def logout_the_session(conn: asyncpg.Connection,refresh_token: str):
     payload = verify_refresh_token(refresh_token)

@@ -62,8 +62,11 @@ async def fetch_messages(
     offset: int,
     limit: int
 ):
+    room_exist = await repo.is_room_exist(conn,room_id)
+    if not room_exist:
+        raise error.RoomError()
     messages = await repo.get_messages(conn,room_id,offset,limit)
     if not messages:
-        raise error.RoomError()
+        return []
     return messages
 

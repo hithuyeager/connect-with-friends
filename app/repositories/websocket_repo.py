@@ -27,6 +27,15 @@ async def add_messages(
         """,room_id,sender_id,message
     )
 
+async def is_room_exist(
+    conn: asyncpg.Connection,
+    room_id: str
+):
+    response = await conn.fetchval(
+        "SELECT 1 FROM messages WHERE room_id = $1",room_id
+    )
+    return True if response else False
+
 async def get_messages(
     conn: asyncpg.Connection,
     room_id: str,
