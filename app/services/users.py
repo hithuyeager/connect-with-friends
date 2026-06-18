@@ -32,6 +32,8 @@ async def make_new_session(conn:asyncpg.Connection,user_id: str):
         is_succeed = await insert_refresh_token(conn,session_id,hashed_refresh_token)
         if is_succeed:
             return tokens
+        else:
+            raise error.DataBaseError()
 
 #------------------GOOGLE UTILS-----------------------------------------
 async def google_login(request: Request):
@@ -106,7 +108,6 @@ async def token_rotation(
         raise error.InvalidSession()
     new_hashed_refresh_token = sha256(refresh_token.encode()).hexdigest()
     if new_hashed_refresh_token != session_info["hashed_refresh_token"]:
-        print(new_hashed_refresh_token == session_info["hashed_refresh_token"])
         raise error.FraudDetection()
     tokens = generate_tokens(payload["sub"],payload["session_id"])
     hashed_refresh_token = sha256(tokens["refresh_token"].encode()).hexdigest()

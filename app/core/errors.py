@@ -59,6 +59,10 @@ class FraudDetection(UsersErrors):
 class RoomError(UsersErrors):
     def __init__(self):
         super().__init__("ROOM NOT FOUND OR ROOM EMPTY",400)
+class DataBaseError(UsersErrors):
+    def __init__(self):
+        super().__init__("FAILURE AT DATABSE",400)
+
 
 
 
