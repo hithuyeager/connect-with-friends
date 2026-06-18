@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends,WebSocket
+from fastapi import APIRouter,Depends,WebSocket,Query
 from fastapi.responses import JSONResponse
 import asyncpg
 
@@ -38,10 +38,11 @@ async def create_direct_room(
         ).model_dump()
     )
 
-@router.websocket("/chat/{room_id}/{access_token}")
+@router.websocket("/chat/{room_id}")
 async def chat_endpoint(
     websocket: WebSocket,
     room_id: str,
-    access_token: str
+    access_token: str = Query(str),
+    conn: asyncpg.Connection = Depends(get_connection)
 ):
-    await chat_system(websocket,room_id,access_token)
+    await chat_system(websocket,room_id,access_token,conn)

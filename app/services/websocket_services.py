@@ -22,7 +22,8 @@ async def search_users(conn: asyncpg.Connection ,search_users: str, current_user
 async def chat_system(
     websocket: WebSocket,
     room_id: str,
-    access_token: str
+    access_token: str,
+    conn: asyncpg.Connection
 ):
     user = verify_access_token(access_token)
     user_id = user["sub"]
@@ -45,6 +46,7 @@ async def chat_system(
                 "room_id" : room_id,
                 "timestamp" : datetime.utcnow().isoformat()
             }
+            await repo.add_messages(conn,room_id,user_id,data["message"])
             await manager.send_to_room(payload,room_id,user_id)
     except WebSocketDisconnect:
         manager.disconnect(user_id,room_id)
