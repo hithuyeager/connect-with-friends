@@ -32,9 +32,16 @@ async def is_room_exist(
     room_id: str
 ):
     response = await conn.fetchval(
-        "SELECT 1 FROM messages WHERE room_id = $1",room_id
+         """
+    SELECT EXISTS(
+        SELECT 1
+        FROM rooms
+        WHERE id = $1
     )
-    return True if response else False
+    """,
+    room_id
+    )
+    return response
 
 async def get_messages(
     conn: asyncpg.Connection,

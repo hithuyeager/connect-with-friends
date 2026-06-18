@@ -60,5 +60,5 @@ async def get_messages(
         content=APIResponse(
             message="success",
             data=messages
-        )
+        ).model_dump()
     )
