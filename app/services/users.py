@@ -28,7 +28,6 @@ async def make_new_session(conn:asyncpg.Connection,user_id: str):
         session_id = await insert_new_session(conn,user_id)
         tokens = generate_tokens(user_id,session_id)
         hashed_refresh_token = sha256(tokens["refresh_token"].encode()).hexdigest()
-        print("---------->",hashed_refresh_token)
         is_succeed = await insert_refresh_token(conn,session_id,hashed_refresh_token)
         if is_succeed:
             return tokens
