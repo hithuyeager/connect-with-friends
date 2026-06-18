@@ -6,7 +6,7 @@ from dependencies import get_connection,get_current_user
 from services.websocket_services import search_users
 from schemas.responses import APIResponse
 from schemas.ws_schemas import DirectRoomSchema
-from services.websocket_services import generate_room_id,chat_system
+from services.websocket_services import generate_room_id,chat_system,fetch_messages
 
 router = APIRouter()
 
@@ -42,7 +42,23 @@ async def create_direct_room(
 async def chat_endpoint(
     websocket: WebSocket,
     room_id: str,
-    access_token: str = Query(str),
     conn: asyncpg.Connection = Depends(get_connection)
 ):
+    access_token = websocket.query_params.get("access_token")
     await chat_system(websocket,room_id,access_token,conn)
+
+@router.get("/get/{room_id}")
+async def get_messages(
+    room_id: str,
+    offset: int = Query(...),
+    limit: int = Query(...),
+    conn: asyncpg.Connection = Depends(get_connection)
+):
+    messages = await fetch_messages(conn,room_id,offset,limit)
+    return JSONResponse(
+        status_code=200,
+        content=APIResponse(
+            message="success",
+            data=messages
+        )
+    )

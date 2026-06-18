@@ -43,7 +43,7 @@ async def rotate_tokens(
             data=tokens
         ).model_dump()
     )
-@router.post("logout")
+@router.post("/logout")
 async def expire_session(token: RefreshToken,conn: asyncpg.Connection=Depends(get_connection)):
     await logout_the_session(conn,token.refresh_token)
     return JSONResponse(

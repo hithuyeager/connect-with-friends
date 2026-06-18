@@ -55,3 +55,15 @@ async def chat_system(
             "message": f"{user_id} left the room",
             "timestamp": datetime.utcnow().isoformat()
         }, room_id, user_id)
+
+async def fetch_messages(
+    conn: asyncpg.Connection,
+    room_id: str,
+    offset: int,
+    limit: int
+):
+    messages = await repo.get_messages(conn,room_id,offset,limit)
+    if not messages:
+        raise error.RoomError()
+    return messages
+

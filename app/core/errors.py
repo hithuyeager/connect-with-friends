@@ -56,6 +56,10 @@ class InvalidSession(UsersErrors):
 class FraudDetection(UsersErrors):
     def __init__(self):
         super().__init__("UNKNOWN REFRESH TOKEN USED",400)
+class RoomError(UsersErrors):
+    def __init__(self):
+        super().__init__("ROOM NOT FOUND OR ROOM EMPTY",400)
+
 
 
         
