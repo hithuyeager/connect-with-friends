@@ -35,8 +35,8 @@ async def is_room_exist(
          """
     SELECT EXISTS(
         SELECT 1
-        FROM rooms
-        WHERE id = $1
+        FROM messages
+        WHERE room_id = $1
     )
     """,
     room_id
