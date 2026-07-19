@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_url_for_raw_sql: str
     my_email: str
     my_email_password: str
+    redis_url: str
 
     model_config = SettingsConfigDict(env_file = ".env")
 
