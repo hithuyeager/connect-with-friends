@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     my_email: str
     my_email_password: str
     redis_url: str
+    frontend_url: str
 
     model_config = SettingsConfigDict(env_file = ".env")
 

@@ -9,9 +9,10 @@ from dependencies import get_connection
 
 router = APIRouter()
 
-@router.get("health_check")
+@router.get("/health_check")
 async def check_up():
     print("docker bind working perfectly")
+
 @router.post("/signup")
 async def signup(user: Signup,conn: asyncpg.Connection = Depends(get_connection)):
     tokens = await app_sign_up(conn,user.email,user.username,user.password)
