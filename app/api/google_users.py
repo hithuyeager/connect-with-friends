@@ -1,5 +1,5 @@
 from fastapi import Request,APIRouter,Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse,RedirectResponse
 import asyncpg
 
 from services.users import google_login,user_google_login
@@ -15,10 +15,5 @@ async def login(request: Request):
 @router.get("/callback",name="google_callback")
 async def call_back(request: Request,conn: asyncpg.Connection = Depends(get_connection)):
     tokens = await user_google_login(request,conn)
-    return JSONResponse(
-        status_code=201,
-        content=APIResponse(
-            message="success",
-            data=tokens
-        ).model_dump()
-    )
+    frontend_url = f"https://your-frontend-domain.com/auth/callback?access_token={tokens['access_token']}&refresh_token={tokens['refresh_token']}"
+    return RedirectResponse(url=frontend_url)
