@@ -2,7 +2,7 @@
 
 A real-time messaging backend built from scratch — JWT refresh rotation with theft detection, WebSocket chat with persisted history, Google OAuth2, and async background jobs. No boilerplate templates, no auth-as-a-service SDKs — every piece of the auth and real-time layer is hand-built and understood end-to-end.
 
-**[Live demo click here →](https://snazzy-begonia-cbabf5.netlify.app/)** · Backend: FastAPI on Render · DB: Postgres on Neon
+**[Live demo →](https://unique-salamander-fb5237.netlify.app)** · Backend: FastAPI on Render · DB: Postgres on Neon
 
 ---
 
@@ -111,6 +111,17 @@ API is now live at `http://localhost:8000`. Open the frontend `index.html` (serv
 - Push notifications for offline message delivery (currently: message persists, user sees it on next login — correct MVP behavior, not yet real-time-pushed to offline devices)
 - Read receipts and typing indicators (connection manager already tracks per-user socket state, this is a natural extension)
 - Redis Pub/Sub for horizontal scaling across multiple WebSocket server instances
+
+## Screenshots
+
+**Login — email/password, Google OAuth, and demo access**
+![Login screen](screenshots/login.png)
+
+**Real-time chat with persisted history**
+![Chat interface](screenshots/chat.png)
+
+**Google OAuth account selection**
+![Google OAuth](screenshots/google-oauth.png)
 
 ## Try it
 
