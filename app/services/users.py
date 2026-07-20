@@ -62,7 +62,10 @@ async def user_google_login(request: Request,conn: asyncpg.Connection):
     if user:
         return await make_new_session(conn,user["id"])
     new_user_id = await add_google_user(conn,user_email,username,user_sub)
-    send_welcome_message.delay(user_email,username)
+    try:
+        send_welcome_message.delay(user_email,username)
+    except Exception:
+        pass
     return await make_new_session(conn,new_user_id)
 
 #------------------APP SIGNUP--------------------------------------------
