@@ -2,7 +2,7 @@
 
 A real-time messaging backend built from scratch — JWT refresh rotation with theft detection, WebSocket chat with persisted history, Google OAuth2, and async background jobs. No boilerplate templates, no auth-as-a-service SDKs — every piece of the auth and real-time layer is hand-built and understood end-to-end.
 
-**[Live demo →](https://unique-salamander-fb5237.netlify.app/)** · Backend: FastAPI on Render · DB: Postgres on Neon
+**[Live demo click here →](https://snazzy-begonia-cbabf5.netlify.app/)** · Backend: FastAPI on Render · DB: Postgres on Neon
 
 ---
 
