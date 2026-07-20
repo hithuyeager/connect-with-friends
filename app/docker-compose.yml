@@ -1,19 +1,4 @@
 services:
-  postgres:
-    image: postgres:17
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app_user -d fast_api"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-    environment:
-      POSTGRES_USER: app_user
-      POSTGRES_PASSWORD: strongpassword
-      POSTGRES_DB: fast_api
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
   fastapi:
     build: .
     ports:
@@ -22,5 +7,3 @@ services:
       - .:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     
-volumes:
-  postgres_data:
